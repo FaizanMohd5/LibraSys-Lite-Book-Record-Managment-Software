@@ -1,1 +1,1 @@
-This project is under development.
+This software project is under development.
