@@ -14,7 +14,7 @@ public class SoftwareFrame extends JFrame{
     JTextField idField, titleField, priceField, authorField, publisherField;
     JButton saveButton, updateButton, deleteButton;
     JTable table;
-    public SoftwareFrame(){
+    public void connectToDatabase(){
         Properties properties = new Properties();
         try (FileInputStream fs = new FileInputStream("C:\\Users\\Acer\\Documents\\sql-credentials\\mysql-abstract-details.properties")){
             properties.load(fs);
@@ -28,7 +28,9 @@ public class SoftwareFrame extends JFrame{
             e.printStackTrace();
         }
         System.out.println((con!=null)?"Established":"Connection failed");
-
+    }
+    public SoftwareFrame(){
+        connectToDatabase();
 
         mainPanel = new JPanel();
         tablePanel = new JPanel(new BorderLayout());
