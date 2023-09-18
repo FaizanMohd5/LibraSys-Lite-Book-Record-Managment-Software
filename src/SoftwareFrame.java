@@ -1,8 +1,13 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 public class SoftwareFrame extends JFrame{
+    Connection con;
     JPanel mainPanel, tablePanel, buttonPanel;
     JTabbedPane tabbedPane;
     JLabel id,title,price,author,publisher;
@@ -10,6 +15,21 @@ public class SoftwareFrame extends JFrame{
     JButton saveButton, updateButton, deleteButton;
     JTable table;
     public SoftwareFrame(){
+        Properties properties = new Properties();
+        try (FileInputStream fs = new FileInputStream("C:\\Users\\Acer\\Documents\\sql-credentials\\mysql-abstract-details.properties")){
+            properties.load(fs);
+
+            String url = properties.getProperty("db.url");
+            String username = properties.getProperty("db.username");
+            String password = properties.getProperty("db.password");
+            con = DriverManager.getConnection(url, username, password);
+        }
+        catch (IOException | SQLException e){
+            e.printStackTrace();
+        }
+        System.out.println((con!=null)?"Established":"Connection failed");
+
+
         mainPanel = new JPanel();
         tablePanel = new JPanel(new BorderLayout());
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
