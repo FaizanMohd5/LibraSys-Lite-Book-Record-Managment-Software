@@ -18,6 +18,7 @@ public class SoftwareFrame extends JFrame {
     JTextField idField, titleField, priceField, authorField, publisherField;
     JButton saveButton, updateButton, deleteButton;
     JTable table;
+    DefaultTableModel model;
 
     private void connectToDatabase() {
         Properties properties = new Properties();
@@ -85,6 +86,30 @@ public class SoftwareFrame extends JFrame {
             e.printStackTrace();
         }
     }
+    private void displayInTable(){
+        String query = "SELECT * FROM BOOK";
+        try (PreparedStatement ps = con.prepareStatement(query)){
+            rs = ps.executeQuery();
+            while(rs.next()){
+                int id = rs.getInt("bookid");
+                String title = rs.getString("Title");
+                double price = rs.getDouble("Price");
+                String author = rs.getString("Author");
+                String publisher = rs.getString("Publisher");
+                model.addRow(new Object[]{id,title,price,author,publisher});
+            }
+        }  catch (SQLException e){
+            e.printStackTrace();
+        }
+        model.fireTableDataChanged();
+    }
+    private void clearTable(){
+        DefaultTableModel model = (DefaultTableModel) this.table.getModel();
+        model.setRowCount(0);
+    }
+    private void updateData(){
+
+    }
     public SoftwareFrame() {
         connectToDatabase();
 
@@ -122,7 +147,6 @@ public class SoftwareFrame extends JFrame {
 
         saveButton.setBounds(290, 320, 100, 40);
 
-
     }
 
     private void initComponents() {
@@ -143,7 +167,8 @@ public class SoftwareFrame extends JFrame {
         updateButton = new JButton("Update");
         deleteButton = new JButton("Delete");
 
-        DefaultTableModel model = new DefaultTableModel();
+        model = new DefaultTableModel();
+
         model.addColumn("Book ID");
         model.addColumn("Title");
         model.addColumn("Price");
@@ -176,6 +201,7 @@ public class SoftwareFrame extends JFrame {
         tabbedPane.addTab("Table View", tablePanel);
 
         add(tabbedPane);
+        displayInTable();
     }
 
     private void activateActionListeners() {
@@ -194,6 +220,16 @@ public class SoftwareFrame extends JFrame {
                 priceField.setText("");
                 authorField.setText("");
                 publisherField.setText("");
+                clearTable();
+                displayInTable();
+            }
+        });
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                //Code to update changes
+                clearTable();
+                displayInTable();
             }
         });
     }
