@@ -109,6 +109,47 @@ public class SoftwareFrame extends JFrame {
     }
     private void updateData(){
 
+        String query = "UPDATE Book SET bookid=?, title=?, price=?, author=?, publisher=? WHERE bookid=?";
+        try {
+            int selectedRowIndex = table.getSelectedRow();
+            if (selectedRowIndex != -1) {
+                int bookid = Integer.parseInt(table.getValueAt(selectedRowIndex, 0).toString());
+                String title = table.getValueAt(selectedRowIndex, 1).toString();
+                double price = Double.parseDouble(table.getValueAt(selectedRowIndex, 2).toString());
+                String author = table.getValueAt(selectedRowIndex, 3).toString();
+                String publisher = table.getValueAt(selectedRowIndex, 4).toString();
+
+                ps = con.prepareStatement(query);
+
+                ps.setInt(1,bookid);
+                ps.setString(2,title);
+                ps.setDouble(3,price);
+                ps.setString(4,author);
+                ps.setString(5,publisher);
+                ps.setInt(6,bookid);
+
+                boolean res = ps.execute();
+                System.out.println(res);
+                int rowsAffected =  ps.executeUpdate();
+
+                if(rowsAffected>0){
+                    System.out.println("Data updated successfully");
+
+                    model.setValueAt(bookid,selectedRowIndex,0);
+                    model.setValueAt(title,selectedRowIndex,1);
+                    model.setValueAt(price, selectedRowIndex, 2);
+                    model.setValueAt(author,selectedRowIndex,3);
+                    model.setValueAt(publisher,selectedRowIndex,4);
+                }
+                else{
+                    System.out.println("data update Failed");
+                }
+            } else {
+                System.out.println("No row selected");
+            }
+        } catch(SQLException | NumberFormatException exception){
+            exception.printStackTrace();
+        }
     }
     public SoftwareFrame() {
         connectToDatabase();
@@ -227,7 +268,7 @@ public class SoftwareFrame extends JFrame {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                //Code to update changes
+                updateData();
                 clearTable();
                 displayInTable();
             }
