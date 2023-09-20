@@ -19,7 +19,7 @@ public class SoftwareFrame extends JFrame {
     JButton saveButton, updateButton, deleteButton;
     JTable table;
     DefaultTableModel model;
-
+    JLabel messagesOnMainPanel;
     private void connectToDatabase() {
         Properties properties = new Properties();
         try (FileInputStream fs = new FileInputStream("C:\\Users\\Acer\\Documents\\sql-credentials\\mysql-abstract-details.properties")) {
@@ -128,8 +128,7 @@ public class SoftwareFrame extends JFrame {
                 ps.setString(5,publisher);
                 ps.setInt(6,bookid);
 
-                boolean res = ps.execute();
-                System.out.println(res);
+                ps.execute();
                 int rowsAffected =  ps.executeUpdate();
 
                 if(rowsAffected>0){
@@ -186,6 +185,8 @@ public class SoftwareFrame extends JFrame {
         authorField.setBounds(170 * 2, 51 * 4, 200, 20);
         publisherField.setBounds(170 * 2, 51 * 5, 200, 20);
 
+        messagesOnMainPanel.setBounds(290,275,150,40);
+
         saveButton.setBounds(290, 320, 100, 40);
 
     }
@@ -208,6 +209,8 @@ public class SoftwareFrame extends JFrame {
         updateButton = new JButton("Update");
         deleteButton = new JButton("Delete");
 
+        messagesOnMainPanel = new JLabel();
+
         model = new DefaultTableModel();
 
         model.addColumn("Book ID");
@@ -229,6 +232,7 @@ public class SoftwareFrame extends JFrame {
         mainPanel.add(authorField);
         mainPanel.add(publisherField);
         mainPanel.add(saveButton);
+        mainPanel.add(messagesOnMainPanel);
 
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
@@ -249,13 +253,18 @@ public class SoftwareFrame extends JFrame {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int id = Integer.parseInt(idField.getText());
-                String title = titleField.getText();
-                double price = Double.parseDouble(priceField.getText());
-                String author = authorField.getText();
-                String publisher = publisherField.getText();
-                insertTheQuery(id,title,price,author,publisher);
-
+                try {
+                    int id = Integer.parseInt(idField.getText());
+                    String title = titleField.getText();
+                    double price = Double.parseDouble(priceField.getText());
+                    String author = authorField.getText();
+                    String publisher = publisherField.getText();
+                    insertTheQuery(id, title, price, author, publisher);
+                }
+                catch (NumberFormatException exception){
+                    System.out.println(exception.getMessage());
+                    messagesOnMainPanel.setText("Enter Valid inputs");
+                }
                 idField.setText("");
                 titleField.setText("");
                 priceField.setText("");
