@@ -154,7 +154,7 @@ public class SoftwareFrame extends JFrame {
         String query = "DELETE FROM Book WHERE bookid=?";
         try{
             int selectedRowIndex = table.getSelectedRow();
-            if(selectedRowIndex > 0){
+            if(selectedRowIndex >= 0){
                 int bookid = Integer.parseInt(table.getValueAt(selectedRowIndex, 0).toString());
 
                 ps = con.prepareStatement(query);
