@@ -150,6 +150,33 @@ public class SoftwareFrame extends JFrame {
             exception.printStackTrace();
         }
     }
+    private void deleteData(){
+        String query = "DELETE FROM Book WHERE bookid=?";
+        try{
+            int selectedRowIndex = table.getSelectedRow();
+            if(selectedRowIndex > 0){
+                int bookid = Integer.parseInt(table.getValueAt(selectedRowIndex, 0).toString());
+
+                ps = con.prepareStatement(query);
+
+                ps.setInt(1,bookid);
+
+                ps.execute();
+                int rowsAffected = ps.executeUpdate();
+                if(rowsAffected > 0){
+                    System.out.println("Record deleted successfully.");
+                }
+                else {
+                    System.out.println("Record deletion failed.");
+                }
+            }
+            else{
+                System.out.println("No row selected to delete");
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
     public SoftwareFrame() {
         connectToDatabase();
 
@@ -278,6 +305,14 @@ public class SoftwareFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e){
                 updateData();
+                clearTable();
+                displayInTable();
+            }
+        });
+        deleteButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteData();
                 clearTable();
                 displayInTable();
             }
