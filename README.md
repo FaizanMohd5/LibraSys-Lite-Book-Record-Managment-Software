@@ -1,4 +1,4 @@
-# LibraSys Lite Book Management Software
+# LibraSys Lite Book Management Software 
 
 LibraSys Lite is a simple and user-friendly book management software developed in Java. It allows users to perform basic operations on a book inventory, including creating, viewing, updating, and deleting book records. This application is designed for single-user scenarios and does not require complex user authentication.
 
